@@ -1,4 +1,7 @@
-def extracted_loop_27():
+from pyJoules.energy_meter import measure_energy
+
+@measure_energy
+def extracted_loop_27_unroll():
     # Mocked variables for demonstration
     item = 50
     array = [50] * 100 + [60]  # Example array where item is repeated
@@ -25,3 +28,5 @@ def extracted_loop_27():
         pos += 1
     
     return pos
+
+extracted_loop_27_unroll()

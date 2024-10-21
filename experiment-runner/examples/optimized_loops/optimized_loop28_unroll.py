@@ -1,10 +1,10 @@
 from pyJoules.energy_meter import measure_energy
 
 @measure_energy
-def extracted_loop_28():
+def extracted_loop_28_unroll():
     # Mocked variables for demonstration
     cycle_start = 0
-    array_len = 100
+    array_len = 10000000
     array = [i for i in range(array_len)]  # Example array
     item = 50
     pos = 10
@@ -56,4 +56,5 @@ def extracted_loop_28():
 
     return array, item
 
-print(extracted_loop_28())
+# print(extracted_loop_28())
+extracted_loop_28_unroll()
