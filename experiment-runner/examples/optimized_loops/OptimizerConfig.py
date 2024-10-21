@@ -102,9 +102,25 @@ class RunnerConfig:
             ['-i', 'inline']      # Inlining
         ]
         
-        for i in range(26,30):
+        for i in range(1,101):
             output_file = output_dir / f"optimized_loop{i}_unroll.py"
+            if not output_file.exists():
+                continue
             print('righr')
+            run_command = ['sudo', 'python3', str(output_file)]
+            result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if result.returncode != 0:
+                print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
+            energy_output = result.stdout.decode('utf-8')
+            print("Energy Measurement STDOUT:", energy_output)
+
+            self.populate_run_data(context, energy_output, "unrolled", output_file)
+
+        for i in range (1,101):
+            output_file = output_dir / f"optimized_loop{i}_earlyT.py"
+            print('righr')
+            if not output_file.exists():
+                continue
             run_command = ['sudo', 'python3', str(output_file)]
             result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             if result.returncode != 0:
