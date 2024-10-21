@@ -26,5 +26,3 @@ def extracted_loop_26():
         i += 1
     
     return pos
-
-print(extracted_loop_26())
