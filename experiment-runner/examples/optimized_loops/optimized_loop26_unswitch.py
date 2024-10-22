@@ -21,3 +21,5 @@ def extracted_loop_26_unswitch():
             pos += 1
     
     return pos
+    
+extracted_loop_26_unswitch()

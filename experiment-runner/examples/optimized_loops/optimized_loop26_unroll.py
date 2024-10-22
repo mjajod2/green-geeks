@@ -29,3 +29,5 @@ def extracted_loop_26_unroll():
         i += 1
     
     return pos
+
+extracted_loop_26_unroll()

@@ -19,3 +19,5 @@ def extracted_loop_26_variable_termination():
             pos += 1
 
     return pos
+
+extracted_loop_26_variable_termination()

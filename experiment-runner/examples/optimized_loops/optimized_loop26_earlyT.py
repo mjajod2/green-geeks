@@ -17,3 +17,5 @@ def extracted_loop_26_optimized():
             pos += 1
 
     return pos
+
+extracted_loop_26_optimized()
