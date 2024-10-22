@@ -7,7 +7,7 @@ import random
 @measure_energy
 def extracted_loop_33():
     # Mocking a list with 10 million elements
-    input_list = [random.randint(0, 100) for _ in range(10_000_000)]
+    input_list = [random.randint(0, 100) for _ in range(10000)]
     is_sorted = False
     if len(input_list) > 1:  # Precondition to check list size
         while is_sorted is False:

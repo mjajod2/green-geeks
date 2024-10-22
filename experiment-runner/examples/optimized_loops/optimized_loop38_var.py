@@ -7,7 +7,7 @@ import random
 @measure_energy
 def extracted_loop_38():
     # Mocking a collection with 10 million elements
-    collection = [random.randint(0, 100) for _ in range(10_000_000)]
+    collection = [random.randint(0, 100) for _ in range(10000)]
     gap = len(collection) // 2  # Initial gap for shell sort
     shrink = 1.3  # Example shrink factor for gap reduction
     min_gap = len(collection) // 10  # Variable for loop termination

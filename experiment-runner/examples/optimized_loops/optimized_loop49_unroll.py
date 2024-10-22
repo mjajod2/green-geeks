@@ -7,7 +7,7 @@ import random
 @measure_energy
 def extracted_loop_49():
     # Mocking a collection with 10 million elements
-    collection = [random.randint(0, 1000) for _ in range(10_000_000)]
+    collection = [random.randint(0, 1000) for _ in range(10000)]
     n = len(collection)
     for i in range(1, n):
         value_to_insert = collection[i]

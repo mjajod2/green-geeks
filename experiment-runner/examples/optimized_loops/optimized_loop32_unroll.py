@@ -6,7 +6,7 @@ import random
 @measure_energy
 def extracted_loop_32():
     # Mocking a collection with 10 million elements
-    collection = [random.randint(0, 100) for _ in range(10_000_000)]
+    collection = [random.randint(0, 100) for _ in range(10000)]
     no_of_elements = len(collection)
     for j in range(0, no_of_elements - 1, 2):  # Unrolling by 2
         if j < no_of_elements - 1 and collection[j + 1] < collection[j]:

@@ -6,7 +6,7 @@ import random
 @measure_energy
 def extracted_loop_44():
     # Mocking a sequence with 10 million elements
-    sequence = [random.randint(0, 100) for _ in range(10_000_000)]
+    sequence = [random.randint(0, 100) for _ in range(10000)]
     for _ in range(len(sequence)):
         for i in range(0, len(sequence) - 1, 2):  # Unrolling by processing two pairs
             rod_upper, rod_lower = sequence[i], sequence[i + 1]

@@ -13,7 +13,7 @@ def extracted_loop_34():
         if input_list[i] > input_list[i + 1]:
             input_list[i], input_list[i + 1] = (input_list[i + 1], input_list[i])
             is_sorted = False
-        if i + 2 < len(input_list) and input_list[i + 2] > input_list[i + 3]:
+        if i + 3 < len(input_list) and input_list[i + 2] > input_list[i + 3]:
             input_list[i + 2], input_list[i + 3] = (input_list[i + 3], input_list[i + 2])
             is_sorted = False
 

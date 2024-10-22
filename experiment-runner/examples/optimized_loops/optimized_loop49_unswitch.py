@@ -7,7 +7,7 @@ import random
 @measure_energy
 def extracted_loop_49():
     # Mocking a collection with 10 million elements
-    collection = [random.randint(0, 1000) for _ in range(10_000_000)]
+    collection = [random.randint(0, 1000) for _ in range(10000)]
     n = len(collection)
     if n > 1:  # Precondition to check if collection has more than one element
         for i in range(1, n):

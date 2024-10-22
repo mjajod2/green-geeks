@@ -7,7 +7,7 @@ import random
 @measure_energy
 def extracted_loop_44():
     # Mocking a sequence with 10 million elements
-    sequence = [random.randint(0, 100) for _ in range(10_000_000)]
+    sequence = [random.randint(0, 100) for _ in range(10000)]
     if len(sequence) > 1:  # Precondition to check sequence length
         for _ in range(len(sequence)):
             for i, (rod_upper, rod_lower) in enumerate(zip(sequence, sequence[1:])):
