@@ -3,11 +3,10 @@ import time
 from pyJoules.energy_meter import measure_energy
 import random
 
-# Mocking a sequence with 10 million elements
-sequence = [random.randint(0, 100) for _ in range(10_000_000)]
-
 @measure_energy
 def extracted_loop_44():
+    # Mocking a sequence with 10 million elements
+    sequence = [random.randint(0, 100) for _ in range(10_000_000)]
     for _ in range(len(sequence)):
         for i in range(0, len(sequence) - 1, 2):  # Unrolling by processing two pairs
             rod_upper, rod_lower = sequence[i], sequence[i + 1]
@@ -22,6 +21,3 @@ def extracted_loop_44():
 
 # Call the function
 extracted_loop_44()
-
-# Display a portion of the sequence after the loop has run
-print(f'First few elements: {sequence[:10]}')

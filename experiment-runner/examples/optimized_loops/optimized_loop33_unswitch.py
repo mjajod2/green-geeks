@@ -3,12 +3,12 @@ import time
 from pyJoules.energy_meter import measure_energy
 import random
 
-# Mocking a list with 10 million elements
-input_list = [random.randint(0, 100) for _ in range(10_000_000)]
-is_sorted = False
 
 @measure_energy
 def extracted_loop_33():
+    # Mocking a list with 10 million elements
+    input_list = [random.randint(0, 100) for _ in range(10_000_000)]
+    is_sorted = False
     if len(input_list) > 1:  # Precondition to check list size
         while is_sorted is False:
             is_sorted = True
@@ -23,6 +23,3 @@ def extracted_loop_33():
 
 # Call the function
 extracted_loop_33()
-
-# Display a portion of the sorted list after the loop has run
-print(f'First few elements: {input_list[:10]}')
