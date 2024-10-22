@@ -12,15 +12,12 @@ array_len = len(array)
 
 @measure_energy
 def extracted_loop_29():
-    for i in range(cycle_start + 1, array_len, 4):  # unrolling by 4
-        if i < array_len and array[i] < item:
-            pos += 1
-        if i+1 < array_len and array[i+1] < item:
-            pos += 1
-        if i+2 < array_len and array[i+2] < item:
-            pos += 1
-        if i+3 < array_len and array[i+3] < item:
-            pos += 1
+    if item >= array[0]:  # Assuming a precondition
+        for i in range(cycle_start + 1, array_len):
+            if array[i] < item:
+                pos += 1
+    else:
+        return  # Skip loop if precondition is false
 
 # Call the function
 extracted_loop_29()

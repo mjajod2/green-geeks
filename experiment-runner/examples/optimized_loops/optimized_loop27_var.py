@@ -10,14 +10,9 @@ pos = 0
 
 @measure_energy
 def extracted_loop_27():
-    while item == array[pos]:
+    max_pos = len(array)  # loop termination with a variable
+    while pos < max_pos and item == array[pos]:
         pos += 1
-        if item == array[pos]:
-            pos += 1
-        if item == array[pos]:
-            pos += 1
-        if item == array[pos]:
-            pos += 1
 
 # Call the function
 extracted_loop_27()

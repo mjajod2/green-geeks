@@ -12,12 +12,8 @@ pos = 0
 def extracted_loop_27():
     while item == array[pos]:
         pos += 1
-        if item == array[pos]:
-            pos += 1
-        if item == array[pos]:
-            pos += 1
-        if item == array[pos]:
-            pos += 1
+        if pos >= len(array):  # early termination when out of bounds
+            break
 
 # Call the function
 extracted_loop_27()

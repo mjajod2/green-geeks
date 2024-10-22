@@ -2,11 +2,11 @@ from pyJoules.energy_meter import measure_energy
 
 @measure_energy
 def extracted_loop_26_unroll():
-    # Mocked variables for demonstration
+    # Mocked variables for a large dataset
     cycle_start = 0
-    array_len = 100
-    array = [i for i in range(array_len)]  # example array
-    item = 50
+    array_len = 10_000_000  # 10 million elements
+    array = [i for i in range(array_len)]  # Large array
+    item = 5_000_000  # Mid-point element to ensure half the array elements are smaller
     pos = 0
 
     # Unroll the loop by 4
@@ -29,6 +29,3 @@ def extracted_loop_26_unroll():
         i += 1
     
     return pos
-
-
-extracted_loop_26_unroll()

@@ -10,14 +10,11 @@ pos = 0
 
 @measure_energy
 def extracted_loop_27():
-    while item == array[pos]:
-        pos += 1
-        if item == array[pos]:
+    if item == array[0]:  # assuming some precondition
+        while item == array[pos]:
             pos += 1
-        if item == array[pos]:
-            pos += 1
-        if item == array[pos]:
-            pos += 1
+    else:
+        return  # no loop execution if precondition is false
 
 # Call the function
 extracted_loop_27()
