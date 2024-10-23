@@ -54,7 +54,7 @@ def extract_loops_from_file(file_path):
             print(f"Error parsing {file_path}: {e}")
             return []
 
-def extract_and_wrap_loops_from_repo(repo_path, max_loops=100):
+def extract_and_wrap_loops_from_repo(repo_path, max_loops=150):
     """
     Extract loops from Python files in a repository and wrap each loop in a function.
     """
@@ -98,7 +98,7 @@ repo_path = "./Python-master"  # Path to the repository
 output_folder = os.path.join("./", "extracted_loops")  # Folder to save extracted loops
 
 # Extract and wrap 100 loops from the repository
-wrapped_loops = extract_and_wrap_loops_from_repo(repo_path, max_loops=100)
+wrapped_loops = extract_and_wrap_loops_from_repo(repo_path, max_loops=150)
 
 # Save the wrapped loops to the 'extracted_loops' folder
 save_loops_to_folder(wrapped_loops, output_folder)
