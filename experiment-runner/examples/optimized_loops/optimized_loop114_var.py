@@ -12,11 +12,12 @@ max_iters = len(collection) // 2  # Variable for loop termination
 
 @measure_energy
 def extracted_loop_114():
+    global left, right, swapped  # Declare global variables
     for _ in range(max_iters):
         if left >= right:
             break
         if collection[left] > collection[right]:
-            collection[left], collection[right] = (collection[right], collection[left])
+            collection[left], collection[right] = collection[right], collection[left]
             swapped = True
         left += 1
         right -= 1
