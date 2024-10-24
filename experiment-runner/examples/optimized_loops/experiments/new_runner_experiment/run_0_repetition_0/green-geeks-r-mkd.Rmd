@@ -1,0 +1,253 @@
+### DATA LOADING & CLEANING
+
+```{r = data preparation}
+library('readr')
+library('dplyr')
+data <- read_csv("run_table.csv")
+positive_energy_data <- na.omit(data)
+positive_energy_data <- filter(positive_energy_data, package_0 > 0)
+
+print(positive_energy_data)
+
+
+
+
+```
+
+### TEST FOR NORMALITY
+
+```{r = test for normality}
+
+qqnorm(positive_energy_data$package_0, main="Q-Q Plot for package_0")
+qqline(positive_energy_data$package_0, col = "red")
+
+shapiro.test(positive_energy_data$package_0)
+
+```
+
+### MEAN, MEDIAN, STD DEVIATION CALCULATION
+
+```{r = central tendency}
+# Unrolled
+unroll_data <- positive_energy_data[positive_energy_data$example_factor1 == "unrolled", ]
+
+# Unswitched
+unswitched_data <- positive_energy_data[positive_energy_data$example_factor1 == "unswitched", ]
+
+# Early Termination
+earlyT_data <- positive_energy_data[positive_energy_data$example_factor1 == "earlyT", ]
+
+# Variable Termination
+var_data <- positive_energy_data[positive_energy_data$example_factor1 == "var", ]
+
+mean_unrol <- mean(unroll_data$package_0, na.rm = TRUE)
+median_unrolled <- median(unroll_data$package_0, na.rm = TRUE)
+sd_unrolled <- sd(unroll_data$package_0, na.rm = TRUE)
+
+mean_unswitched <- mean(unswitched_data$package_0, na.rm = TRUE)
+sd_unswitched <- sd(unswitched_data$package_0, na.rm = TRUE)
+median_unswitched <- median(unswitched_data$package_0, na.rm = TRUE)
+
+# Early Termination
+mean_earlyT <- mean(earlyT_data$package_0, na.rm = TRUE)
+median_earlyT <- median(earlyT_data$package_0, na.rm = TRUE)
+sd_earlyT <- sd(earlyT_data$package_0, na.rm = TRUE)
+
+# Variable Termination
+mean_var <- mean(var_data$package_0, na.rm = TRUE)
+median_var <- median(var_data$package_0, na.rm = TRUE)
+sd_var <- sd(var_data$package_0, na.rm = TRUE)
+
+# Print results for each optimization technique
+cat("Unrolled:\n")
+cat("Mean:", mean_unrol, "\nMedian:", median_unrolled, "\nStandard Deviation:", sd_unrolled, "\n\n")
+
+cat("Unswitched:\n")
+cat("Mean:", mean_unswitched, "\nMedian:", median_unswitched, "\nStandard Deviation:", sd_unswitched, "\n\n")
+
+cat("Early Termination:\n")
+cat("Mean:", mean_earlyT, "\nMedian:", median_earlyT, "\nStandard Deviation:", sd_earlyT, "\n\n")
+
+cat("Variable Termination:\n")
+cat("Mean:", mean_var, "\nMedian:", median_var, "\nStandard Deviation:", sd_var, "\n")
+
+
+cat("Unrolled:\n")
+cat("Mean:", mean_unrol, "\nMedian:", median_unrolled, "\nStandard Deviation:", sd_unrolled, "\n\n")
+
+cat("Unswitched:\n")
+cat("Mean:", mean_unswitched, "\nMedian:", median_unswitched, "\nStandard Deviation:", sd_unswitched, "\n\n")
+
+cat("Early Termination:\n")
+cat("Mean:", mean_earlyT, "\nMedian:", median_earlyT, "\nStandard Deviation:", sd_earlyT, "\n\n")
+
+cat("Variable Termination:\n")
+cat("Mean:", mean_var, "\nMedian:", median_var, "\nStandard Deviation:", sd_var, "\n")
+
+```
+
+### HYPOTHESIS TESTING USING KRUSKAL-WALLIS TEST
+
+```{r = hypothesis testing}
+library('stats')
+
+# Kruskal-Wallis test to compare the energy consumption (package_0) across optimization techniques (example_factor1)
+kruskal_test <- kruskal.test(package_0 ~ example_factor1, data = positive_energy_data)
+kruskal_test
+```
+
+### DUNN'S POST HOC TEST
+
+```{r}
+#dunn_test_result <- dunn_test_result(package_0 ~ example_factor1, data = positive_energy_data, method = "bonferroni")
+library('dunn.test')
+dunn_test_result <- dunn.test(positive_energy_data$package_0, positive_energy_data$example_factor1, method = "bonferroni")
+```
+
+### MONOTONIC DURATION VS PACKAGE_0 FOR SPEARMAN CORRELATION TEST
+
+```{r}
+plot(positive_energy_data$duration, positive_energy_data$package_0, 
+     main = "Scatter Plot of Duration vs Package_0", 
+     xlab = "Duration", 
+     ylab = "Package_0", 
+     pch = 19, col = "blue")
+```
+
+### LINEAR REGRESSION BETWEEN PACKAGE_0 AND DURATION
+
+```{r}
+library(ggplot2)
+
+
+# Create the scatter plot with a regression line
+ggplot(positive_energy_data, aes(x = duration, y = package_0)) +
+  geom_point(color = "blue") +        # Scatter plot points
+  geom_smooth(method = "lm", col = "red") +  # Regression line (optional)
+  labs(title = "Energy Consumption vs Duration", 
+       x = "Duration", 
+       y = "Energy Consumption")
+  theme_minimal()
+
+# Create the scatter plot with a regression line as a 'zoomed in' view
+ggplot(positive_energy_data, aes(x = duration, y = package_0)) +
+  geom_point(color = "blue") +        # Scatter plot points
+  geom_smooth(method = "lm", col = "red") +  # Regression line (optional)
+  labs(title = "Energy Consumption vs Duration", 
+       x = "Duration", 
+       y = "Energy Consumption") +
+  coord_cartesian(xlim = c(0, 15), ylim = c(0, 2.5e8))  # Adjust x and y axis limits
+```
+
+### CORRELATION TEST DURATION VS PACKAGE_0
+
+```{r}
+cor.test(positive_energy_data$duration, positive_energy_data$package_0, method = "spearman")
+```
+
+#### MANN-WHITNEY U TEST FOR CPU COMPARISON
+
+```{r}
+group1 <- subset(positive_energy_data, example_factor1 == "unrolled")$cpu_power
+group2 <- subset(positive_energy_data, example_factor1 == "unswitched")$cpu_power
+group3 <- subset(positive_energy_data, example_factor1 == "earlyT")$cpu_power
+group4 <- subset(positive_energy_data, example_factor1 == "var")$cpu_power
+
+# means
+
+mean_g1 = mean(group1, na.rm = TRUE)
+mean_g2 = mean(group2, na.rm = TRUE)
+mean_g3 = mean(group3, na.rm = TRUE)
+mean_g4 = mean(group4,na.rm = TRUE)
+
+test_result1 = wilcox.test(group1, group3, alternative = "two.sided")
+test_result1
+
+
+# Step 1: Get unique techniques
+techniques <- unique(data$example_factor1)
+
+# Step 2: Loop through all pairs of techniques and run the test
+for (i in 1:(length(techniques) - 1)) {
+  for (j in (i + 1):length(techniques)) {
+    group1 <- subset(positive_energy_data, example_factor1 == techniques[i])$cpu_power
+    group2 <- subset(positive_energy_data, example_factor1 == techniques[j])$cpu_power
+    test_result <- wilcox.test(group1, group2, alternative = "two.sided")
+    cat("Comparison between", techniques[i], "and", techniques[j], "\n")
+    print(test_result)
+    cat("\n")
+  }
+}
+
+# Step 1: Plot the boxplot
+boxplot(cpu_power ~ example_factor1, data = positive_energy_data,
+        main = "CPU Consumption by Technique",
+        xlab = "Technique",
+        ylab = "CPU Power",
+        col = "lightblue",
+        las = 2, # Rotate x-axis labels for better readability
+        outline = FALSE) # Removes outliers from the plot for clarity
+
+# Step 2: Add a title to the plot
+title("Boxplot of CPU Consumption by Technique")
+
+```
+
+#### MANN-WHITNEY FOR DURATION
+
+```{r}
+group_t1 <- subset(positive_energy_data, example_factor1 == "unrolled")$duration
+group_t2 <- subset(positive_energy_data, example_factor1 == "unswitched")$duration
+group_t3 <- subset(positive_energy_data, example_factor1 == "earlyT")$duration
+group_t4 <- subset(positive_energy_data, example_factor1 == "var")$duration
+
+mean_gt1 = mean(group_t1, na.rm = TRUE)
+mean_gt2 = mean(group_t2, na.rm = TRUE)
+mean_gt3 = mean(group_t3, na.rm = TRUE)
+mean_gt4 = mean(group_t4,na.rm = TRUE)
+
+
+test_result_t1 = wilcox.test(group_t3, group_t4, alternative = "two.sided")
+test_result_t1
+
+
+techniques <- unique(positive_energy_data$example_factor1)
+
+# Step 2: Loop through all pairs of techniques and run the test
+for (i in 1:(length(techniques) - 1)) {
+  for (j in (i + 1):length(techniques)) {
+    group1 <- subset(positive_energy_data, example_factor1 == techniques[i])$duration
+    group2 <- subset(positive_energy_data, example_factor1 == techniques[j])$duration
+    test_result <- wilcox.test(group_t1, group_t2, alternative = "two.sided")
+    cat("Comparison between", techniques[i], "and", techniques[j], "\n")
+    print(test_result)
+    cat("\n")
+  }
+}
+
+# Step 1: Plot the boxplot
+boxplot(duration ~ example_factor1, data = positive_energy_data,
+        main = "CPU Consumption by Technique",
+        xlab = "Technique",
+        ylab = "Duration",
+        col = "lightblue",
+        las = 2, # Rotate x-axis labels for better readability
+        outline = FALSE) # Removes outliers from the plot for clarity
+
+# Step 2: Add a title to the plot
+title("Boxplot of CPU Consumption by Technique")
+```
+
+### CONCLUSION VALIDITY
+
+```{r}
+library(effsize)
+two_techniques_data <- subset(positive_energy_data, example_factor1 %in% c("unrolled", "unswitched"))
+
+# Perform Cohen's d between the two techniques
+cohen_d_result <- cohen.d(package_0 ~ example_factor1, data = two_techniques_data)
+
+# Print the result
+print(cohen_d_result)
+
+```
