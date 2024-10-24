@@ -12,6 +12,8 @@ from pathlib import Path
 from os.path import dirname, realpath
 import pandas as pd
 import random
+import time
+import psutil
 
 import subprocess
 
@@ -79,132 +81,160 @@ class RunnerConfig:
 
         output.console_log("Config.before_run() called!")
 
+    # def start_run(self, context: RunnerContext) -> None:
+    #     """Apply both techniques to each input file, generate output files, and then run the output files to measure energy."""
+    #     output.console_log("Config.start_run() called!")
+
+
+    #     # Output directory (you can modify this as needed)
+    #     output_dir = Path("/home/mihir/Desktop/newProject/green-geeks/experiment-runner/examples/optimized_loops/")
+
+    #     # List of techniques with corresponding command options
+    #     techniques = [
+    #         ['-u', 'unrolling'],  # Loop unrolling
+    #         ['-i', 'inline']      # Inlining
+    #     ]
+        
+    #     # for i in range(1,101):
+    #     #     output_file = output_dir / f"optimized_loop{i}_unroll.py"
+    #     #     if not output_file.exists():
+    #     #         continue
+    #     #     print('righr')
+    #     #     run_command = ['sudo', 'python3', str(output_file)]
+    #     #     result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #     #     if result.returncode != 0:
+    #     #         print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
+    #     #     energy_output = result.stdout.decode('utf-8')
+    #     #     print("Energy Measurement STDOUT:", energy_output)
+
+    #     #     self.populate_run_data(context, energy_output, "unrolled", f"optimized_loop{i}_unroll.py")
+
+    #     # for i in range(1,101):
+    #     #     output_file = output_dir / f"optimized_loop{i}_unswitch.py"
+    #     #     if not output_file.exists():
+    #     #         continue
+    #     #     print('righr')
+    #     #     run_command = ['sudo', 'python3', str(output_file)]
+    #     #     result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #     #     if result.returncode != 0:
+    #     #         print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
+    #     #     energy_output = result.stdout.decode('utf-8')
+    #     #     print("Energy Measurement STDOUT:", energy_output)
+
+    #     #     self.populate_run_data(context, energy_output, "unswitched", f"optimized_loop{i}_unswitch.py")
+
+    #     # for i in range (1,101):
+    #     #     output_file = output_dir / f"optimized_loop{i}_earlyT.py"
+    #     #     print('righr')
+    #     #     if not output_file.exists():
+    #     #         continue
+    #     #     run_command = ['sudo', 'python3', str(output_file)]
+    #     #     result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #     #     if result.returncode != 0:
+    #     #         print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
+    #     #     energy_output = result.stdout.decode('utf-8')
+    #     #     print("Energy Measurement STDOUT:", energy_output)
+
+    #     #     self.populate_run_data(context, energy_output, "earlyT", f"optimized_loop{i}_earlyT.py")
+            
+    #     # for i in range (1,101):
+    #     #     output_file = output_dir / f"optimized_loop{i}_var.py"
+    #     #     print('righr')
+    #     #     if not output_file.exists():
+    #     #         continue
+    #     #     run_command = ['sudo', 'python3', str(output_file)]
+    #     #     result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #     #     if result.returncode != 0:
+    #     #         print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
+    #     #     energy_output = result.stdout.decode('utf-8')
+    #     #     print("Energy Measurement STDOUT:", energy_output)
+
+    #     #     self.populate_run_data(context, energy_output, "var", f"optimized_loop{i}_var.py")
+
+    #     techniques = [
+    #         ('_unroll', 'unrolled'),
+    #         ('_unswitch', 'unswitched'),
+    #         ('_earlyT', 'earlyT'),
+    #         ('_var', 'var')
+    #     ]
+
+    #     for i in range(1, 120):
+    #         for suffix, technique_name in techniques:
+    #             output_file = output_dir / f"optimized_loop{i}{suffix}.py"
+    #             if output_file.exists():
+    #                 run_command = ['sudo', 'python3', str(output_file)]
+    #                 result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #                 if result.returncode == 0:
+    #                     energy_output = result.stdout.decode('utf-8')
+    #                     print("Energy Measurement STDOUT:", energy_output)
+    #                     self.populate_run_data(context, energy_output, technique_name, output_file)
+
+
+    #     # Iterate over input files and apply both techniques
+    #     # for idx, input_file in enumerate(input_files):
+    #     #     for technique_params in techniques:
+    #     #         technique_option, technique_name = technique_params
+
+    #     #         # Define the output file name
+    #     #         output_file = output_dir / f"{Path(input_file).stem}_{technique_name}.py"
+
+    #     #         # Construct the subprocess command to optimize the input file
+    #     #         # optimize_command = ['python3', '/home/mihir/Desktop/green-geeks/experiment-runner/examples/PythonLoopOptimizer/src/main.py', 
+    #     #         #                     '-f', input_file, '-o', str(output_file)] + [technique_option]
+
+    #     #         # # Log the command for debugging
+    #     #         # print(f"Running optimization command: {' '.join(optimize_command)}")
+
+    #     #         # # Run the optimization command using subprocess
+    #     #         # subprocess.run(optimize_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    #     #         # After generating the output file, run the output file to measure energy consumption
+    #     #         run_command = ['sudo', 'python3', str(output_file)]
+
+    #     #         # Log the command for debugging
+    #     #         print(f"Running output file command: {' '.join(run_command)}")
+
+    #     #         # Run the output file and capture the energy measurement output
+    #     #         result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #     #         if result.returncode != 0:
+    #     #             print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
+    #     #         # Capture the energy measurement STDOUT and pass it to populate_run_data
+    #     #         energy_output = result.stdout.decode('utf-8')
+    #     #         print("Energy Measurement STDOUT:", energy_output)
+
+    #     #         # Pass the energy output and the technique name to populate_run_data
+    #     #         self.populate_run_data(context, energy_output, technique_name, output_file)
+
+
     def start_run(self, context: RunnerContext) -> None:
-        """Apply both techniques to each input file, generate output files, and then run the output files to measure energy."""
         output.console_log("Config.start_run() called!")
 
-
-        # Output directory (you can modify this as needed)
         output_dir = Path("/home/mihir/Desktop/newProject/green-geeks/experiment-runner/examples/optimized_loops/")
+        techniques = [('_unroll', 'unrolled'), ('_unswitch', 'unswitched'), ('_earlyT', 'earlyT'), ('_var', 'var')]
 
-        # List of techniques with corresponding command options
-        techniques = [
-            ['-u', 'unrolling'],  # Loop unrolling
-            ['-i', 'inline']      # Inlining
-        ]
-        
-        # for i in range(1,101):
-        #     output_file = output_dir / f"optimized_loop{i}_unroll.py"
-        #     if not output_file.exists():
-        #         continue
-        #     print('righr')
-        #     run_command = ['sudo', 'python3', str(output_file)]
-        #     result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        #     if result.returncode != 0:
-        #         print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
-        #     energy_output = result.stdout.decode('utf-8')
-        #     print("Energy Measurement STDOUT:", energy_output)
+        for run_number in range(10):
+            for i in range(1, 120):
+                for suffix, technique_name in techniques:
+                    output_file = output_dir / f"optimized_loop{i}{suffix}.py"
+                    print(f'now processing optimized_loop{i}{suffix}.py')
+                    if output_file.exists():
+                        cpu_power_before = psutil.cpu_percent(interval=None)
 
-        #     self.populate_run_data(context, energy_output, "unrolled", f"optimized_loop{i}_unroll.py")
+                        # Run the file
+                        run_command = ['sudo', 'python3', str(output_file)]
+                        result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        # for i in range(1,101):
-        #     output_file = output_dir / f"optimized_loop{i}_unswitch.py"
-        #     if not output_file.exists():
-        #         continue
-        #     print('righr')
-        #     run_command = ['sudo', 'python3', str(output_file)]
-        #     result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        #     if result.returncode != 0:
-        #         print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
-        #     energy_output = result.stdout.decode('utf-8')
-        #     print("Energy Measurement STDOUT:", energy_output)
+                        if result.returncode == 0:
+                            energy_output = result.stdout.decode('utf-8')
+                            cpu_power_after = psutil.cpu_percent(interval=None)
 
-        #     self.populate_run_data(context, energy_output, "unswitched", f"optimized_loop{i}_unswitch.py")
+                            # Calculate CPU power used during the run
+                            cpu_power_used = cpu_power_after - cpu_power_before
 
-        # for i in range (1,101):
-        #     output_file = output_dir / f"optimized_loop{i}_earlyT.py"
-        #     print('righr')
-        #     if not output_file.exists():
-        #         continue
-        #     run_command = ['sudo', 'python3', str(output_file)]
-        #     result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        #     if result.returncode != 0:
-        #         print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
-        #     energy_output = result.stdout.decode('utf-8')
-        #     print("Energy Measurement STDOUT:", energy_output)
+                            print("Energy Measurement STDOUT:", energy_output)
+                            self.populate_run_data(context, energy_output, technique_name, f"optimized_loop{i}{suffix}.py", run_number, cpu_power_used)
 
-        #     self.populate_run_data(context, energy_output, "earlyT", f"optimized_loop{i}_earlyT.py")
-            
-        # for i in range (1,101):
-        #     output_file = output_dir / f"optimized_loop{i}_var.py"
-        #     print('righr')
-        #     if not output_file.exists():
-        #         continue
-        #     run_command = ['sudo', 'python3', str(output_file)]
-        #     result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        #     if result.returncode != 0:
-        #         print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
-        #     energy_output = result.stdout.decode('utf-8')
-        #     print("Energy Measurement STDOUT:", energy_output)
-
-        #     self.populate_run_data(context, energy_output, "var", f"optimized_loop{i}_var.py")
-
-        techniques = [
-            ('_unroll', 'unrolled'),
-            ('_unswitch', 'unswitched'),
-            ('_earlyT', 'earlyT'),
-            ('_var', 'var')
-        ]
-
-        for i in range(1, 101):
-            for suffix, technique_name in techniques:
-                output_file = output_dir / f"optimized_loop{i}{suffix}.py"
-                if output_file.exists():
-                    run_command = ['sudo', 'python3', str(output_file)]
-                    result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    if result.returncode == 0:
-                        energy_output = result.stdout.decode('utf-8')
-                        print("Energy Measurement STDOUT:", energy_output)
-                        self.populate_run_data(context, energy_output, technique_name, output_file)
-
-
-        # Iterate over input files and apply both techniques
-        # for idx, input_file in enumerate(input_files):
-        #     for technique_params in techniques:
-        #         technique_option, technique_name = technique_params
-
-        #         # Define the output file name
-        #         output_file = output_dir / f"{Path(input_file).stem}_{technique_name}.py"
-
-        #         # Construct the subprocess command to optimize the input file
-        #         # optimize_command = ['python3', '/home/mihir/Desktop/green-geeks/experiment-runner/examples/PythonLoopOptimizer/src/main.py', 
-        #         #                     '-f', input_file, '-o', str(output_file)] + [technique_option]
-
-        #         # # Log the command for debugging
-        #         # print(f"Running optimization command: {' '.join(optimize_command)}")
-
-        #         # # Run the optimization command using subprocess
-        #         # subprocess.run(optimize_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-        #         # After generating the output file, run the output file to measure energy consumption
-        #         run_command = ['sudo', 'python3', str(output_file)]
-
-        #         # Log the command for debugging
-        #         print(f"Running output file command: {' '.join(run_command)}")
-
-        #         # Run the output file and capture the energy measurement output
-        #         result = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        #         if result.returncode != 0:
-        #             print(f"Error in optimization command: {result.stderr.decode('utf-8')}")
-        #         # Capture the energy measurement STDOUT and pass it to populate_run_data
-        #         energy_output = result.stdout.decode('utf-8')
-        #         print("Energy Measurement STDOUT:", energy_output)
-
-        #         # Pass the energy output and the technique name to populate_run_data
-        #         self.populate_run_data(context, energy_output, technique_name, output_file)
-
-
-
+                        time.sleep(self.time_between_runs_in_ms / 1000)
 
 
     def start_measurement(self, context: RunnerContext) -> None:
@@ -236,33 +266,95 @@ class RunnerConfig:
     #     print("STDOUT:", stdout.decode('utf-8'))
     #     print("STDERR:", stderr.decode('utf-8'))
 
-    def populate_run_data(self, context: RunnerContext, energy_output: str, technique_name: str, input_file: str) -> None:
-        """Parse and process energy measurement data from measure_energy decorator, then store it in run_table.csv."""
+    # def populate_run_data(self, context: RunnerContext, energy_output: str, technique_name: str, input_file: str) -> None:
+    #     """Parse and process energy measurement data from measure_energy decorator, then store it in run_table.csv."""
+    #     output.console_log("Config.populate_run_data() called!")
+
+    #     # Split the energy_output by lines
+    #     output_lines = energy_output.strip().splitlines()
+    #     print(output_lines)
+    #     # Check if there are any lines to process
+    #     if not output_lines:
+    #         print(f"No valid data output from energy measurement for {input_file} using {technique_name}.")
+    #         return
+
+    #     # Initialize an empty list to collect the parsed rows
+    #     rows = []
+
+    #     # Loop through the output lines and parse energy measurement data
+    #     for line in output_lines:
+    #         print('UEYE',line)
+    #         try:
+    #             # Parse each key-value pair from the line (assuming they are separated by ';')
+    #             data = line.strip().split(';')
+
+    #             # Create a dictionary to store the parsed data
+    #             parsed_data = {}
+    #             for item in data:
+    #                 key, value = item.split(':')
+    #                 parsed_data[key.strip()] = value.strip()
+
+    #             # Append the parsed data to the list of rows
+    #             rows.append({
+    #                 'timestamp': parsed_data.get('begin timestamp', ''),
+    #                 'tag': parsed_data.get('tag', ''),
+    #                 'duration': parsed_data.get('duration', ''),
+    #                 'package_0': parsed_data.get('package_0', ''),
+    #                 'core_0': parsed_data.get('core_0', ''),
+    #                 'input_file': input_file
+    #             })
+
+    #         except ValueError as e:
+    #             print(f"Error parsing line: {e}")
+    #             continue
+
+    #     # Convert the list of rows to a DataFrame
+    #     df = pd.DataFrame(rows)
+
+    #     # Ensure there are valid rows to write to the CSV
+    #     if not df.empty:
+    #         # Add __run_id and technique name to columns manually
+    #         df['__run_id'] = 'run_0_repetition_0'
+    #         df['__done'] = 'DONE'
+    #         df['example_factor1'] = technique_name  # Insert the applied technique here
+    #         df['input_file'] = input_file
+
+    #         # Reorder columns to match the CSV format
+    #         df = df[['__run_id', '__done', 'example_factor1', 'timestamp', 'tag', 'duration', 'package_0', 'core_0', 'input_file']]
+
+    #         # Save the DataFrame to a CSV file, appending each row
+    #         run_table_path = context.run_dir / 'run_table.csv'
+    #         df.to_csv(run_table_path, mode='a', header=not run_table_path.exists(), index=False)
+
+    #         print(f"Data successfully written to {run_table_path}.")
+    #     else:
+    #         print(f"No valid energy measurement data to write for {input_file} using {technique_name}.")
+    def populate_run_data(self, context: RunnerContext, energy_output: str, technique_name: str, input_file: str, run_number: int, cpu_power: float) -> None:
         output.console_log("Config.populate_run_data() called!")
 
         # Split the energy_output by lines
         output_lines = energy_output.strip().splitlines()
-        print(output_lines)
-        # Check if there are any lines to process
+
         if not output_lines:
             print(f"No valid data output from energy measurement for {input_file} using {technique_name}.")
             return
 
-        # Initialize an empty list to collect the parsed rows
         rows = []
 
         # Loop through the output lines and parse energy measurement data
         for line in output_lines:
-            print('UEYE',line)
             try:
                 # Parse each key-value pair from the line (assuming they are separated by ';')
                 data = line.strip().split(';')
 
-                # Create a dictionary to store the parsed data
                 parsed_data = {}
                 for item in data:
-                    key, value = item.split(':')
-                    parsed_data[key.strip()] = value.strip()
+                    # Ensure there's a ':' in the item before attempting to split it
+                    if ':' in item:
+                        key, value = item.split(':', 1)  # Split only once in case there's more than one ':'
+                        parsed_data[key.strip()] = value.strip()
+                    else:
+                        print(f"Skipping malformed data: {item}")
 
                 # Append the parsed data to the list of rows
                 rows.append({
@@ -271,7 +363,8 @@ class RunnerConfig:
                     'duration': parsed_data.get('duration', ''),
                     'package_0': parsed_data.get('package_0', ''),
                     'core_0': parsed_data.get('core_0', ''),
-                    'input_file': input_file
+                    'input_file': input_file,
+                    'cpu_power': cpu_power
                 })
 
             except ValueError as e:
@@ -281,29 +374,20 @@ class RunnerConfig:
         # Convert the list of rows to a DataFrame
         df = pd.DataFrame(rows)
 
-        # Ensure there are valid rows to write to the CSV
         if not df.empty:
-            # Add __run_id and technique name to columns manually
-            df['__run_id'] = 'run_0_repetition_0'
+            df['__run_id'] = f'run_{run_number}_repetition_0'
             df['__done'] = 'DONE'
-            df['example_factor1'] = technique_name  # Insert the applied technique here
+            df['example_factor1'] = technique_name
             df['input_file'] = input_file
 
-            # Reorder columns to match the CSV format
-            df = df[['__run_id', '__done', 'example_factor1', 'timestamp', 'tag', 'duration', 'package_0', 'core_0', 'input_file']]
+            df = df[['__run_id', '__done', 'example_factor1', 'timestamp', 'tag', 'duration', 'package_0', 'core_0', 'cpu_power', 'input_file']]
 
-            # Save the DataFrame to a CSV file, appending each row
             run_table_path = context.run_dir / 'run_table.csv'
             df.to_csv(run_table_path, mode='a', header=not run_table_path.exists(), index=False)
 
             print(f"Data successfully written to {run_table_path}.")
         else:
             print(f"No valid energy measurement data to write for {input_file} using {technique_name}.")
-
-
-
-
-
 
     def after_experiment(self) -> None:
         """Perform any activity required after stopping the experiment here
