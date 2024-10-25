@@ -24,7 +24,7 @@ qqline(positive_energy_data$package_0, col = "red")
 qqnorm(positive_energy_data$cpu_power, main="Q-Q Plot for CPU usage")
 qqline(positive_energy_data$cpu_power, col = "red")
 
-qqnorm(positive_energy_data$duration, main="Q-Q Plot for CPU usage")
+qqnorm(positive_energy_data$duration, main="Q-Q Plot for duration")
 qqline(positive_energy_data$duration, col = "red")
 
 shapiro.test(positive_energy_data$package_0)
@@ -95,9 +95,9 @@ cat("Mean:", mean_var, "\nMedian:", median_var, "\nStandard Deviation:", sd_var,
 library(ggplot2)
 ggplot(positive_energy_data, aes(x = example_factor1, y = package_0)) +
   geom_violin(trim = FALSE, fill = "skyblue") +
-  geom_boxplot(width = 0.1, outlier.shape = NA) +  # Remove outliers from boxplot
+  geom_boxplot(width = 0.1) +  # Remove outliers from boxplot
   scale_y_continuous(limits = c(0, 2e8)) +  # Set y-axis limit to zoom in
-  labs(title = "Violin Plot of Energy Consumption by Optimization Technique (No Outliers)",
+  labs(title = "Violin Plot of Energy Consumption by Optimization Technique",
        x = "Optimization Technique",
        y = "Energy Consumption (package_0)") +
   theme_minimal()
@@ -111,16 +111,30 @@ ggplot(positive_energy_data, aes(x = example_factor1, y = package_0)) +
 library('stats')
 
 # Kruskal-Wallis test to compare the energy consumption (package_0) across optimization techniques (example_factor1)
-kruskal_test <- kruskal.test(package_0 ~ example_factor1, data = positive_energy_data)
-kruskal_test
+kruskal_test_energy <- kruskal.test(package_0 ~ example_factor1, data = positive_energy_data)
+kruskal_test_energy
+
+kruskal_test_duration <- kruskal.test(duration ~ example_factor1, data = positive_energy_data)
+kruskal_test_duration
+
+kruskal_test_cpu <- kruskal.test(cpu_power ~ example_factor1, data = positive_energy_data)
+kruskal_test_cpu
 ```
 
 ### DUNN'S POST HOC TEST
 
 ```{r}
 #dunn_test_result <- dunn_test_result(package_0 ~ example_factor1, data = positive_energy_data, method = "bonferroni")
+
 library('dunn.test')
+
 dunn_test_result <- dunn.test(positive_energy_data$package_0, positive_energy_data$example_factor1, method = "bonferroni")
+
+dunn_test_result <- dunn.test(positive_energy_data$duration, positive_energy_data$example_factor1, method = "bonferroni")
+
+
+
+
 ```
 
 ### MONOTONIC DURATION VS PACKAGE_0 FOR SPEARMAN CORRELATION TEST
@@ -162,6 +176,8 @@ ggplot(positive_energy_data, aes(x = duration, y = package_0)) +
 
 ```{r}
 cor.test(positive_energy_data$duration, positive_energy_data$package_0, method = "spearman")
+
+cor.test(positive_energy_data$cpu_power, positive_energy_data$package_0, method = "spearman")
 ```
 
 #### MANN-WHITNEY U TEST FOR CPU COMPARISON
