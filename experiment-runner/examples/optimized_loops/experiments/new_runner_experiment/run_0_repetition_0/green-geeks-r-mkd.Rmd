@@ -21,7 +21,15 @@ print(positive_energy_data)
 qqnorm(positive_energy_data$package_0, main="Q-Q Plot for package_0")
 qqline(positive_energy_data$package_0, col = "red")
 
+qqnorm(positive_energy_data$cpu_power, main="Q-Q Plot for CPU usage")
+qqline(positive_energy_data$cpu_power, col = "red")
+
+qqnorm(positive_energy_data$duration, main="Q-Q Plot for CPU usage")
+qqline(positive_energy_data$duration, col = "red")
+
 shapiro.test(positive_energy_data$package_0)
+shapiro.test(positive_energy_data$cpu_power)
+shapiro.test(positive_energy_data$duration)
 
 ```
 
