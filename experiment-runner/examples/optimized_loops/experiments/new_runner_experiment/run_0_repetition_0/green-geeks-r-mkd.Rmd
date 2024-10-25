@@ -84,6 +84,17 @@ cat("Mean:", mean_earlyT, "\nMedian:", median_earlyT, "\nStandard Deviation:", s
 cat("Variable Termination:\n")
 cat("Mean:", mean_var, "\nMedian:", median_var, "\nStandard Deviation:", sd_var, "\n")
 
+library(ggplot2)
+ggplot(positive_energy_data, aes(x = example_factor1, y = package_0)) +
+  geom_violin(trim = FALSE, fill = "skyblue") +
+  geom_boxplot(width = 0.1, outlier.shape = NA) +  # Remove outliers from boxplot
+  scale_y_continuous(limits = c(0, 2e8)) +  # Set y-axis limit to zoom in
+  labs(title = "Violin Plot of Energy Consumption by Optimization Technique (No Outliers)",
+       x = "Optimization Technique",
+       y = "Energy Consumption (package_0)") +
+  theme_minimal()
+
+
 ```
 
 ### HYPOTHESIS TESTING USING KRUSKAL-WALLIS TEST
@@ -179,17 +190,25 @@ for (i in 1:(length(techniques) - 1)) {
   }
 }
 
-# Step 1: Plot the boxplot
-boxplot(cpu_power ~ example_factor1, data = positive_energy_data,
-        main = "CPU Consumption by Technique",
-        xlab = "Technique",
-        ylab = "CPU Power",
-        col = "lightblue",
-        las = 2, # Rotate x-axis labels for better readability
-        outline = FALSE) # Removes outliers from the plot for clarity
-
-# Step 2: Add a title to the plot
-title("Boxplot of CPU Consumption by Technique")
+library(ggplot2)
+ggplot(positive_energy_data, aes(x = example_factor1, y = cpu_power)) +
+  geom_violin(trim = FALSE, fill = "skyblue") +
+  geom_boxplot(width = 0.1) +  # Remove outliers from boxplot, add ", outlier.shape = NA"
+  
+  #scale_y_continuous(limits = c(0, 2e8)) +  # Set y-axis limit to zoom in
+  labs(title = "Violin Plot of CPU usage by Optimization Technique (No Outliers)",
+       x = "Optimization Technique",
+       y = "CPU usage") +
+  theme_minimal()
+ggplot(positive_energy_data, aes(x = example_factor1, y = cpu_power)) +
+  geom_violin(trim = FALSE, fill = "skyblue") +
+  geom_boxplot(width = 0.1) +  # Remove outliers from boxplot, add 
+  
+  scale_y_continuous(limits = c(0, 12)) +  # Set y-axis limit to zoom in
+  labs(title = "Violin Plot of CPU usage by Optimization Technique (Zoomed in)",
+       x = "Optimization Technique",
+       y = "CPU usage") +
+  theme_minimal()
 
 ```
 
